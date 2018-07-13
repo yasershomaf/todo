@@ -2,8 +2,10 @@
 const Express = require('express');
 const {
     createTodo,
+    clearTodos,
     deleteTodo,
     readTodos,
+    readTodo,
     updateTodo,
 } = require('./actions');
 const PORT = 3000;
@@ -25,13 +27,27 @@ app.get('/todos', (req, res, next) => {
     ).catch(error => next(error));
 });
 
-// updateTodo
-app.put('/todos/:id', (req, res, next) => {
+// readTodo
+app.get('/todos/:id', (req, res, next) => {
     const {id} = req.params;
-    const {todo} = req.body;
-    updateTodo(id, todo).then(
+    readTodo(id).then(
         data => res.send(data)
     ).catch(error => next(error));
+});
+
+// updateTodo, markAsDone and markAsNotDone
+app.put('/todos/:id', (req, res, next) => {
+    const {id} = req.params;
+    updateTodo(id, req.body).then(
+        data => res.send(data)
+    ).catch(error => next(error));
+});
+
+// clearTodos
+app.delete('/todos', (req, res, next) => {
+    clearTodos().then(() => res.send(
+        'The contents of the todo-list have been successfully emptied'
+    )).catch(error => next(error));
 });
 
 // deleteTodo
@@ -41,8 +57,6 @@ app.delete('/todos/:id', (req, res, next) => {
         `The item with the id "${id}" was successfully deleted from the todo-list`
     )).catch(error => next(error));
 });
-
-// // TODO: implement readTodo, clearTodos, markAsDone and markAsNotDone routes and actions
 
 // error handling
 app.use((error, req, res, next) => {

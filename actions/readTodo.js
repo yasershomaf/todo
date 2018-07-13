@@ -1,9 +1,8 @@
 const {promisify} = require('util');
-const {readFile, writeFile} = require('fs');
+const {readFile} = require('fs');
 const readFileAsync = promisify(readFile);
-const writeFileAsync = promisify(writeFile);
-let updatedTodo;
-module.exports = (id, data) => readFileAsync('./todos.json').then(text => {
+let todo;
+module.exports = (id) => readFileAsync('./todos.json').then(text => {
     const todos = JSON.parse(text);
     let index = todos.length;
     for (let i=0; i<todos.length; i++) {
@@ -16,8 +15,6 @@ module.exports = (id, data) => readFileAsync('./todos.json').then(text => {
         throw(`The item with the id "${id}" was not found in the todo-list`);
     }
     else {
-        updatedTodo = Object.assign({}, todos[index], data);
-        todos[index] = updatedTodo;
-        return writeFileAsync('./todos.json', JSON.stringify(todos));
+        todo = Object.assign({}, todos[index]);
     }
-}).then(() => updatedTodo);
+}).then(() => todo);
