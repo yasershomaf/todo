@@ -39,7 +39,7 @@ app.delete('/todos/:id', (req, res, next) => {
     const {id} = req.params;
     deleteTodo(id).then(() => res.send(
         `The item with the id "${id}" was successfully deleted from the todo-list`
-    )).catch(error => {next(error);});
+    )).catch(error => next(error));
 });
 
 // // TODO: implement readTodo, clearTodos, markAsDone and markAsNotDone routes and actions
